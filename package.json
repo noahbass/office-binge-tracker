@@ -27,6 +27,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "prebuild": "node seed-scraper.js",
     "build": "gatsby build",
     "develop": "gatsby develop",
     "start": "npm run develop",
