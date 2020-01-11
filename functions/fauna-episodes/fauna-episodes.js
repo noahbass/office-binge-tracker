@@ -6,20 +6,7 @@ exports.handler = async (event, context) => {
   switch (event.httpMethod) {
     case 'GET':
       // e.g. GET /.netlify/functions/fauna-crud
-      if (segments.length === 0) {
-        return require('./read-all').handler(event, context)
-      }
-      // e.g. GET /.netlify/functions/fauna-crud/123456
-      if (segments.length === 1) {
-        event.id = segments[0]
-        return require('./read').handler(event, context)
-      } else {
-        return {
-          statusCode: 500,
-          body:
-            'too many segments in GET request, must be either /.netlify/functions/fauna-crud or /.netlify/functions/fauna-crud/123456'
-        }
-      }
+      return require('./read-all').handler(event, context)
     case 'POST':
       // e.g. POST /.netlify/functions/fauna-crud with a body of key value pair objects, NOT strings
       return require('./create').handler(event, context)
