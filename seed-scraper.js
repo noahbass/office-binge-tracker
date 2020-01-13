@@ -1,8 +1,24 @@
+require('dotenv').config()
+
 const axios = require('axios')
 const cheerio = require('cheerio')
 const fs = require('fs')
+const mongoose = require('mongoose')
+const EpisodeModel = require('./model/Episode')
+
+// Setup MongoDB connection
+const MONGO_URI = process.env.MONGO_URI
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const IMAGE_FS_DIRECTORY = './src/images/episode-thumbnails/'
+
+/**
+ * seed-scraper is responsible for:
+ *  1) getting episode metadata
+ *  2) downloading episode thumbnails to disk (if they don't already exist)
+ *  3) ensuring metadata is inserted in MongoDB
+ */
+
 
 // Given a URL, get the page html as a string
 const getPage = async (url) => {
@@ -96,11 +112,28 @@ const downloadImage = (episodeId, imageUri) => {
 
         console.log('Downloading thumbnails...')
 
-        // download images
+        // // download images
         for (const item of metadata) {
             await downloadImage(item.episodeId, item.imageUri)
         }
+
+        console.log('Adding metadata to mongodb')
+        const mongoResponse = await EpisodeModel.find({}).exec()
+
+        if (mongoResponse.length === metadata.length) {
+            // database is already seeded!
+            console.log('MongoDB already seeded!')
+            mongoose.disconnect()
+            return
+        }
+
+        // add metadata to MongoDB
+        // Create an entry for each piece of metadata
+        await EpisodeModel.create(metadata)
+
+        mongoose.disconnect()
     } catch (e) {
+        mongoose.disconnect()
         throw Error(e)
     }
 })()

@@ -16,7 +16,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
 import Header from "./header"
-import "./layout.css"
+// import "./layout.css"
 
 const Layout = ({ children }) => {
   // Enforce dark mode everywhere
@@ -43,7 +43,7 @@ const Layout = ({ children }) => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Header siteTitle={data.site.siteMetadata.title} />
-      <Container maxWidth='xl'>
+      <Container maxWidth='lg'>
         <main>{children}</main>
         <footer>
           <Typography>commit id</Typography>
