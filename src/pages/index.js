@@ -29,7 +29,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     // get data from GitHub api
-    fetch(`http://localhost:34567/.netlify/functions/get-episodes`)
+    fetch(`/.netlify/functions/get-episodes`)
       .then(response => response.json()) // parse JSON from request
       .then(result => {
         const data = result.data
