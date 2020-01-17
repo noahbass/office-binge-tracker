@@ -1,7 +1,7 @@
 require('dotenv').config()
 
 const mongoose = require('mongoose')
-const EpisodeModel = require('../../model/Episode')
+const EpisodeModel = require('./Episode')
 
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
 // Accessible at /.netlify/functions/get-episodes
