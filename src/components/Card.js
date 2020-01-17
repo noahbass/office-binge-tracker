@@ -6,6 +6,7 @@ import Card from '@material-ui/core/Card'
 import Link from '@material-ui/core/Link'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
+import Checkbox from '@material-ui/core/Checkbox'
 
 const watchIconStyle = {
   position: 'absolute',
@@ -20,13 +21,16 @@ const imageStyle = {
 export default function SimpleCard(props) {
   const episodeId = props.episodeId
   const episodeTitle = props.episodeTitle
-  const watchStatus = props.watchStatus || false // true: 'watched' or false: 'unwatched'
   const imdbLink = props.imdbLink
+  const manage = props.manage
+
+  const watchStatus = props.watchStatus || false // true: 'watched' or false: 'unwatched'
+  const [watchChecked, setWatchChecked] = React.useState(watchStatus) // hook for watch
 
   const useStyles = makeStyles({
     card: {
       // minHeight: 200,
-      opacity: watchStatus === true ? 0.4 : 1
+      opacity: watchChecked === true ? 0.4 : 1
     },
     title: {
       fontSize: 14,
@@ -42,6 +46,40 @@ export default function SimpleCard(props) {
 
   const classes = useStyles()
 
+  // Handle checkbox clicked event
+  const handleCheckboxChange = async event => {
+    const target = event.target
+    const isChecked = target.checked
+
+    if (isChecked) {
+      setWatchChecked(true) // Checkbox is now true
+      await updateWatchStatus(episodeId, true)
+    } else {
+      setWatchChecked(false) // Checkbox is now false
+      await updateWatchStatus(episodeId, false)
+    }
+  }
+
+  // Call API to update watch status
+  const updateWatchStatus = async (episodeId, newWatchStatus) => {
+    const requestBody = {
+      episodeId: episodeId,
+      watched: newWatchStatus
+    }
+
+    await fetch(
+      `http://localhost:34567/.netlify/functions/update-episode`,
+      {
+        method: 'POST',
+        headers: {
+          // 'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(requestBody)
+      }
+    )
+  }
+
   return (
     <Card className={classes.card}>
       <Link href={imdbLink}
@@ -50,7 +88,7 @@ export default function SimpleCard(props) {
             color='inherit'
             underline='none'>
         <CardContent>
-          { watchStatus === true ?
+          { watchChecked === true ?
               <div style={watchIconStyle}>
                 <WatchedIcon></WatchedIcon>
               </div>
@@ -61,10 +99,11 @@ export default function SimpleCard(props) {
           </Typography>
           <Typography variant='h5' component='h2' className={classes.pos}>
             {episodeTitle}
+            { manage === true ? 
+                <span>
+                  <Checkbox checked={watchChecked} onChange={handleCheckboxChange}></Checkbox>
+                </span> : '' }
           </Typography>
-          {/* <Typography variant='body2' component='p' color='textSecondary'>
-            Lorem ipsum
-          </Typography> */}
         </CardContent>
       </Link>
     </Card>

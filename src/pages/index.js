@@ -29,7 +29,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     // get data from GitHub api
-    fetch(`/.netlify/functions/get-episodes`)
+    fetch(`http://localhost:34567/.netlify/functions/get-episodes`)
       .then(response => response.json()) // parse JSON from request
       .then(result => {
         const data = result.data
@@ -86,6 +86,7 @@ const IndexPage = () => {
                 episodeTitle={episode.episodeTitle}
                 imdbLink={episode.episodeImdbLink}
                 watchStatus={episode.watched}
+                manage={true}
                 >
             </Card>
           </Grid>
