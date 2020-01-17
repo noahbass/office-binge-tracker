@@ -17,7 +17,7 @@ exports.handler = async (event, context) => {
       data: mongoResponse
     }
 
-    mongoose.disconnect()
+    await mongoose.disconnect()
 
     return {
       statusCode: 200,
@@ -27,7 +27,7 @@ exports.handler = async (event, context) => {
       body: JSON.stringify(response)
     }
   } catch (err) {
-    mongoose.disconnect()
+    await mongoose.disconnect()
     return {
       statusCode: 500,
       body: JSON.stringify({ message: err.toString() })
