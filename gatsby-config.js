@@ -3,8 +3,7 @@ const proxy = require('http-proxy-middleware')
 module.exports = {
   siteMetadata: {
     title: `Office Binge`,
-    description: ``,
-    author: `@gatsbyjs`,
+    description: `Tracking us watch the entirety of The Office before graduation`
   },
   // for avoiding CORS while developing Netlify Functions locally
   // read more: https://www.gatsbyjs.org/docs/api-proxy/#advanced-proxying
