@@ -11,7 +11,7 @@ const Header = ({ siteTitle }) => (
       </Typography>
 
       <Typography variant='subtitle1'>
-        Tracking us watch the entirety of The Office before graduation.
+        Tracking us watch the entirety of The Office before graduation
       </Typography>
     </Box>
   </header>
