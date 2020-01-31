@@ -8,8 +8,10 @@ import Layout from '../components/layout'
 import SEO from '../components/seo'
 import Card from '../components/Card'
 import LoadingPlaceholder from '../components/LoadingPlaceholder'
+import { Facebook, Code, ContentLoader } from 'react-content-loader'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
+import { Face } from '@material-ui/icons'
 
 
 const IndexPage = () => {
@@ -115,8 +117,10 @@ const IndexPage = () => {
         }
 
       <section>
+        <LoadingPlaceholder hidden={loading} />
+
         <Grid container spacing={4}>
-          {loading ? <LoadingPlaceholder></LoadingPlaceholder> : episodeData.map(episode => (
+          {loading ? '' : episodeData.map(episode => (
             <Grid item xs={6} sm={4} md={2} lg={2} xl={2}>
               <Card
                   episodeId={episode.episodeId}
