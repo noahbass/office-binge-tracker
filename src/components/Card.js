@@ -8,15 +8,12 @@ import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import Checkbox from '@material-ui/core/Checkbox'
 import Box from '@material-ui/core/Box'
+import netlifyIdentity from 'netlify-identity-widget'
 
 const watchIconStyle = {
   position: 'absolute',
   width: 100,
   'z-index': '10000'
-}
-
-const imageStyle = {
-  // position: 'absolute'
 }
 
 export default function SimpleCard(props) {
@@ -61,6 +58,19 @@ export default function SimpleCard(props) {
     }
   }
 
+  // https://www.netlify.com/blog/2018/03/29/jamstack-architecture-on-netlify-how-identity-and-functions-work-together/
+  const generateHeaders = () => {
+    const headers = { 'Content-Type': 'application/json' }
+
+    if (netlifyIdentity.currentUser()) {
+      return netlifyIdentity.currentUser().jwt().then((token) => {
+        return { ...headers, Authorization: `Bearer ${token}` }
+      })
+    }
+
+    return Promise.resolve(headers)
+  }
+
   // Call API to update watch status
   const updateWatchStatus = async (episodeId, newWatchStatus) => {
     const requestBody = {
@@ -68,11 +78,14 @@ export default function SimpleCard(props) {
       watched: newWatchStatus
     }
 
+    const headers = await generateHeaders()
+    console.log(headers)
+
     await fetch(
       `/.netlify/functions/update-episode`,
       {
         method: 'POST',
-        headers: {},
+        headers: headers,
         body: JSON.stringify(requestBody)
       }
     )
@@ -93,7 +106,7 @@ export default function SimpleCard(props) {
                 </Box>
               </div>
             : '' }
-          <CardImage style={imageStyle} episodeId={episodeId} className={classes.image}></CardImage>
+          <CardImage episodeId={episodeId} className={classes.image}></CardImage>
           <Typography className={classes.title} color='textSecondary' gutterBottom>
             {episodeId.toUpperCase()}
           </Typography>
