@@ -6,6 +6,20 @@ const EpisodeModel = require('./Episode')
 // Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
 // Accessible at /.netlify/functions/update-episode
 exports.handler = async (event, context) => {
+  // If in a development environment, don't check for netlify identity token.
+  // Otherwise, check if an authenticated user accessed this function before continuing
+  if (!process.env.NETLIFY_DEV || process.env.NETLIFY_DEV !== 'true') {
+    // Check if authenticated before continueing
+    const isAuthenticated = context.clientContext && context.clientContext.user
+
+    if (!isAuthenticated) {
+      return {
+        statusCode: 401,
+        body: JSON.stringify({ message: 'You must be signed in to call this function' })
+      }
+    }
+  }
+  
   const MONGO_URI = process.env.MONGO_URI
   mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
-import { getUser, isLoggedIn, logout } from '../services/auth'
+import { isLoggedIn } from '../services/auth'
 
 import Layout from '../components/layout'
 import SEO from '../components/seo'
@@ -78,15 +78,11 @@ const IndexPage = () => {
     return Math.round(difference / oneDay)
   }
 
-  const content = { message: "", login: true }
   const loggedIn = isLoggedIn()
 
   return (
     <Layout>
       <SEO title='Home' />
-      <span>{content.message}</span>
-
-      {/* <p>Loading: {String(loading)}</p> */}
 
       {loading ? '' :
           <Grid container spacing={6}>
