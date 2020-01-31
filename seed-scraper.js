@@ -4,7 +4,7 @@ const axios = require('axios')
 const cheerio = require('cheerio')
 const fs = require('fs')
 const mongoose = require('mongoose')
-const EpisodeModel = require('./functions/get-episodes/Episode')
+const EpisodeModel = require('./functions/Episode')
 
 // Setup MongoDB connection
 const MONGO_URI = process.env.MONGO_URI

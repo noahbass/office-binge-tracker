@@ -5,19 +5,24 @@
   "author": "Noah Bass <noah@noahbass.com>",
   "dependencies": {
     "@material-ui/core": "^4.8.3",
+    "@material-ui/icons": "^4.5.1",
     "axios": "^0.19.1",
     "cheerio": "^1.0.0-rc.3",
     "dotenv": "^8.2.0",
     "gatsby": "^2.18.12",
     "gatsby-image": "^2.2.34",
+    "gatsby-plugin-create-client-paths": "^2.1.21",
     "gatsby-plugin-manifest": "^2.2.31",
     "gatsby-plugin-material-ui": "^2.1.6",
+    "gatsby-plugin-netlify-identity-widget": "^1.1.1",
     "gatsby-plugin-offline": "^3.0.27",
     "gatsby-plugin-react-helmet": "^3.1.16",
     "gatsby-plugin-sharp": "^2.3.5",
     "gatsby-source-filesystem": "^2.1.40",
+    "gatsby-source-local-git": "^0.2.2",
     "gatsby-transformer-sharp": "^2.3.7",
     "mongoose": "^5.8.7",
+    "netlify-identity-widget": "^1.5.6",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-content-loader": "^4.3.4",
@@ -27,6 +32,7 @@
     "react-promise-tracker": "^2.0.5"
   },
   "devDependencies": {
+    "http-proxy-middleware": "^0.20.0",
     "netlify-lambda": "^1.6.3"
   },
   "license": "MIT",

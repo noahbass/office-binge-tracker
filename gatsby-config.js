@@ -1,8 +1,23 @@
+const proxy = require('http-proxy-middleware')
+
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Default Starter`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
+    title: `Office Binge`,
+    description: ``,
     author: `@gatsbyjs`,
+  },
+  // for avoiding CORS while developing Netlify Functions locally
+  // read more: https://www.gatsbyjs.org/docs/api-proxy/#advanced-proxying
+  developMiddleware: app => {
+    app.use(
+      '/.netlify/functions/',
+      proxy({
+        target: 'http://localhost:34567',
+        pathRewrite: {
+          '/.netlify/functions/': '',
+        },
+      })
+    )
   },
   plugins: [
     {
@@ -30,6 +45,8 @@ module.exports = {
         display: `minimal-ui`
       },
     },
+    `gatsby-source-local-git`,
+    'gatsby-plugin-netlify-identity-widget'
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,

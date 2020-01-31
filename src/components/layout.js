@@ -16,6 +16,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
 import Header from "./header"
+import Footer from './footer'
 // import "./layout.css"
 
 const Layout = ({ children }) => {
@@ -42,12 +43,10 @@ const Layout = ({ children }) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Header siteTitle={data.site.siteMetadata.title} />
       <Container maxWidth='lg'>
+        <Header siteTitle={data.site.siteMetadata.title} />
         <main>{children}</main>
-        <footer>
-          <Typography>commit id</Typography>
-        </footer>
+        <Footer></Footer>
       </Container>
     </ThemeProvider>
   )

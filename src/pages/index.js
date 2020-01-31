@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'gatsby'
 
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
+import { getUser, isLoggedIn, logout } from '../services/auth'
 
 import Layout from '../components/layout'
 import SEO from '../components/seo'
 import Card from '../components/Card'
 import LoadingPlaceholder from '../components/LoadingPlaceholder'
+import Typography from '@material-ui/core/Typography'
+import Box from '@material-ui/core/Box'
 
 
 const IndexPage = () => {
@@ -26,10 +28,11 @@ const IndexPage = () => {
   // Client-side Runtime Data Fetching
   const [loading, setLoading] = useState(true)
   const [episodeData, setEpisodeData] = useState(0)
+  const [numberEpisodesWatched, setNumberEpisodesWatched] = useState(0)
 
   useEffect(() => {
     // get data from GitHub api
-    fetch(`http://localhost:34567/.netlify/functions/get-episodes`)
+    fetch(`/.netlify/functions/get-episodes`)
       .then(response => response.json()) // parse JSON from request
       .then(result => {
         const data = result.data
@@ -56,50 +59,83 @@ const IndexPage = () => {
 
         incrementalIdData.sort(compare);
 
+        const numberEpisodesWatched = incrementalIdData.filter(entry => entry.watched && entry.watched === true).length
+
         setEpisodeData(incrementalIdData)
+        setNumberEpisodesWatched(numberEpisodesWatched)
         setLoading(false)
       })
   }, [])
 
+  const graduationCounter = () => {
+    const oneDay = 24 * 60 * 60 * 1000
+    const now = new Date()
+    const targetDate = new Date(2020, 4, 1) // May 1, 2020
+  
+    const difference = Math.abs(targetDate - now)
+  
+    // get the difference in milliseconds
+    return Math.round(difference / oneDay)
+  }
+
+  const content = { message: "", login: true }
+  const loggedIn = isLoggedIn()
+
   return (
     <Layout>
       <SEO title='Home' />
+      <span>{content.message}</span>
 
-      <p>Loading: {String(loading)}</p>
+      {/* <p>Loading: {String(loading)}</p> */}
 
-      {/* <LoadingPlaceholder></LoadingPlaceholder> */}
+      {loading ? '' :
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <Box mt={2} mb={2}>
+                <Typography variant='h5'>
+                  {numberEpisodesWatched}
+                  &nbsp;watched&nbsp;
+                  &mdash;
+                  &nbsp;
+                  {episodeData.length - numberEpisodesWatched}
+                  &nbsp;left&nbsp;
+                  &mdash;
+                  &nbsp;
+                  {graduationCounter()}
+                  &nbsp;days until graduation
+                </Typography>
+              </Box>
 
-      <Grid container spacing={4}>
-        {/* <Grid item xs={12}>
-          <Paper className={classes.paper}>xs=12</Paper>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Paper className={classes.paper}>xs=12 sm=6</Paper>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Paper className={classes.paper}>xs=12 sm=6</Paper>
-        </Grid> */}
-        {loading ? '' : episodeData.map(episode => (
-          <Grid item xs={6} sm={4} md={2} lg={2} xl={2}>
-            <Card
-                episodeId={episode.episodeId}
-                episodeTitle={episode.episodeTitle}
-                imdbLink={episode.episodeImdbLink}
-                watchStatus={episode.watched}
-                manage={true}
-                >
-            </Card>
+              <Box fontWeight={300} mt={2} mb={2}>
+                <Typography variant='h6' component='h6'>
+                  {
+                    Math.floor(((episodeData.length - numberEpisodesWatched) / graduationCounter()) * 100) / 100
+                  }
+                  &nbsp;episodes per day needed
+                </Typography>
+              </Box>
+            </Grid>
           </Grid>
-        ))}
-      </Grid>
+        }
 
-      {/* <h1>Hi people</h1>
-      <p>Welcome to your new Gatsby site.</p>
-      <p>Now go build something great.</p>
-      <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-        <Image />
-      </div> */}
-      <Link to='/page-2/'>Go to page 2</Link>
+      <section>
+        <Grid container spacing={4}>
+          {loading ? <LoadingPlaceholder></LoadingPlaceholder> : episodeData.map(episode => (
+            <Grid item xs={6} sm={4} md={2} lg={2} xl={2}>
+              <Card
+                  episodeId={episode.episodeId}
+                  episodeTitle={episode.episodeTitle}
+                  imdbLink={episode.episodeImdbLink}
+                  watchStatus={episode.watched}
+                  manage={loggedIn}
+                  >
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+
+        <div data-netlify-identity-button></div>
+      </section>
     </Layout>
   )
 }

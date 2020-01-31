@@ -7,6 +7,7 @@ import Link from '@material-ui/core/Link'
 import CardContent from '@material-ui/core/CardContent'
 import Typography from '@material-ui/core/Typography'
 import Checkbox from '@material-ui/core/Checkbox'
+import Box from '@material-ui/core/Box'
 
 const watchIconStyle = {
   position: 'absolute',
@@ -30,7 +31,7 @@ export default function SimpleCard(props) {
   const useStyles = makeStyles({
     card: {
       // minHeight: 200,
-      opacity: watchChecked === true ? 0.4 : 1
+      opacity: watchChecked === true ? 0.5 : 1
     },
     title: {
       fontSize: 14,
@@ -68,13 +69,10 @@ export default function SimpleCard(props) {
     }
 
     await fetch(
-      `http://localhost:34567/.netlify/functions/update-episode`,
+      `/.netlify/functions/update-episode`,
       {
         method: 'POST',
-        headers: {
-          // 'Content-Type': 'application/json'
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        headers: {},
         body: JSON.stringify(requestBody)
       }
     )
@@ -90,7 +88,9 @@ export default function SimpleCard(props) {
         <CardContent>
           { watchChecked === true ?
               <div style={watchIconStyle}>
-                <WatchedIcon></WatchedIcon>
+                <Box m={0.5}>
+                  <WatchedIcon></WatchedIcon>
+                </Box>
               </div>
             : '' }
           <CardImage style={imageStyle} episodeId={episodeId} className={classes.image}></CardImage>
