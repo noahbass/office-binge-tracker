@@ -74,7 +74,7 @@ function SEO({ description, lang, meta, title }) {
         },
         {
           name: 'viewport',
-          content: 'minimum-scale=1, initial-scale=1, width=device-width'
+          content: 'width=device-width, initial-scale=1'
         }
       ].concat(meta)}
     />
