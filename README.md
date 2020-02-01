@@ -16,6 +16,7 @@
 $ git clone git@github.com:noahbass/office-binge-tracker.git
 $ cd office-binge-tracker
 $ cp .env.example .env
+$ # add MongoDB URI to .env
 $ yarn
 $ yarn develop
 ```
