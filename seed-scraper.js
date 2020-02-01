@@ -1,3 +1,10 @@
+/**
+ * seed-scraper is called before a `yarn build`. It's responsible for:
+ *  1) getting episode metadata
+ *  2) downloading episode thumbnails to disk (if they don't already exist)
+ *  3) ensuring metadata is inserted in MongoDB
+ */
+
 require('dotenv').config()
 
 const axios = require('axios')
@@ -11,13 +18,17 @@ const MONGO_URI = process.env.MONGO_URI
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const IMAGE_FS_DIRECTORY = './src/images/episode-thumbnails/'
-
-/**
- * seed-scraper is responsible for:
- *  1) getting episode metadata
- *  2) downloading episode thumbnails to disk (if they don't already exist)
- *  3) ensuring metadata is inserted in MongoDB
- */
+const IMDB_PAGES = [
+    'https://www.imdb.com/title/tt0386676/episodes?season=1',
+    'https://www.imdb.com/title/tt0386676/episodes?season=2',
+    'https://www.imdb.com/title/tt0386676/episodes?season=3',
+    'https://www.imdb.com/title/tt0386676/episodes?season=4',
+    'https://www.imdb.com/title/tt0386676/episodes?season=5',
+    'https://www.imdb.com/title/tt0386676/episodes?season=6',
+    'https://www.imdb.com/title/tt0386676/episodes?season=7',
+    'https://www.imdb.com/title/tt0386676/episodes?season=8',
+    'https://www.imdb.com/title/tt0386676/episodes?season=9'
+]
 
 
 // Given a URL, get the page html as a string
@@ -81,6 +92,7 @@ const downloadImage = (episodeId, imageUri) => {
     })
 }
 
+
 (async () => {
     try {
         // Ensure the image download folder exists
@@ -88,19 +100,9 @@ const downloadImage = (episodeId, imageUri) => {
             fs.mkdirSync(IMAGE_FS_DIRECTORY)
         }
 
-        const pages = [
-            'https://www.imdb.com/title/tt0386676/episodes?season=1',
-            'https://www.imdb.com/title/tt0386676/episodes?season=2',
-            'https://www.imdb.com/title/tt0386676/episodes?season=3',
-            'https://www.imdb.com/title/tt0386676/episodes?season=4',
-            'https://www.imdb.com/title/tt0386676/episodes?season=5',
-            'https://www.imdb.com/title/tt0386676/episodes?season=6',
-            'https://www.imdb.com/title/tt0386676/episodes?season=7',
-            'https://www.imdb.com/title/tt0386676/episodes?season=8',
-            'https://www.imdb.com/title/tt0386676/episodes?season=9'
-        ]
+        const pages = IMDB_PAGES
 
-        console.log('Getting metadata...')
+        console.info('Getting metadata...')
 
         // Get metadata
         let metadata = []
@@ -110,19 +112,29 @@ const downloadImage = (episodeId, imageUri) => {
             metadata.push(...episodesMetada)
         }
 
-        console.log('Downloading thumbnails...')
+        // If the number of thumnail images on disk is equal to the
+        // number of thumbnails to download, assume that we have all
+        // thumbnails downloaded.
+        const files = fs.readdirSync(IMAGE_FS_DIRECTORY)
+        const jpgFiles = files.filter(file => file.endsWith('.jpg'))
 
-        // // download images
-        for (const item of metadata) {
-            await downloadImage(item.episodeId, item.imageUri)
+        if (jpgFiles.length === metadata.length) {
+            console.info('Thumbnails already on disk')
+        } else {
+            console.info('Downloading thumbnails...')
+
+            // Download images
+            for (const item of metadata) {
+                await downloadImage(item.episodeId, item.imageUri)
+            }
         }
 
-        console.log('Adding metadata to mongodb')
+        console.info('Adding metadata to mongodb')
         const mongoResponse = await EpisodeModel.find({}).exec()
 
         if (mongoResponse.length === metadata.length) {
             // database is already seeded!
-            console.log('MongoDB already seeded!')
+            console.info('MongoDB already seeded!')
             mongoose.disconnect()
             return
         }
