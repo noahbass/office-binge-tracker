@@ -5,19 +5,17 @@
  * See: https://www.gatsbyjs.org/docs/use-static-query/
  */
 
-import React from "react"
-import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
+import React from 'react'
+import PropTypes from 'prop-types'
+import { useStaticQuery, graphql } from 'gatsby'
 
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
+import CssBaseline from '@material-ui/core/CssBaseline'
 import Container from '@material-ui/core/Container'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
-import Header from "./header"
+import Header from './header'
 import Footer from './footer'
-// import "./layout.css"
 
 const Layout = ({ children }) => {
   // Enforce dark mode everywhere

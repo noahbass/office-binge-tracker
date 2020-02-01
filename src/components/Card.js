@@ -27,18 +27,13 @@ export default function SimpleCard(props) {
 
   const useStyles = makeStyles({
     card: {
-      // minHeight: 200,
       opacity: watchChecked === true ? 0.5 : 1
     },
     title: {
       fontSize: 14,
     },
     pos: {
-      fontSize: 20,
-      // marginBottom: 12
-    },
-    image: {
-      // marginBottom: 20
+      fontSize: 20
     }
   })
 
@@ -106,10 +101,13 @@ export default function SimpleCard(props) {
                 </Box>
               </div>
             : '' }
+
           <CardImage episodeId={episodeId} className={classes.image}></CardImage>
+
           <Typography className={classes.title} color='textSecondary' gutterBottom>
             {episodeId.toUpperCase()}
           </Typography>
+
           <Typography variant='h5' component='h2' className={classes.pos}>
             {episodeTitle}
             { manage === true ? 

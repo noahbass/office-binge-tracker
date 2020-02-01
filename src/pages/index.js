@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 
-import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import { isLoggedIn } from '../services/auth'
 
@@ -8,32 +7,17 @@ import Layout from '../components/layout'
 import SEO from '../components/seo'
 import Card from '../components/Card'
 import LoadingPlaceholder from '../components/LoadingPlaceholder'
-import { Facebook, Code, ContentLoader } from 'react-content-loader'
 import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
-import { Face } from '@material-ui/icons'
 
 
 const IndexPage = () => {
-  const useStyles = makeStyles(theme => ({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-  }))
-  const classes = useStyles()
-
   // Client-side Runtime Data Fetching
   const [loading, setLoading] = useState(true)
   const [episodeData, setEpisodeData] = useState(0)
   const [numberEpisodesWatched, setNumberEpisodesWatched] = useState(0)
 
   useEffect(() => {
-    // get data from GitHub api
     fetch(`/.netlify/functions/get-episodes`)
       .then(response => response.json()) // parse JSON from request
       .then(result => {
@@ -80,6 +64,7 @@ const IndexPage = () => {
     return Math.round(difference / oneDay)
   }
 
+  // Check if there is an authenticated user
   const loggedIn = isLoggedIn()
 
   return (
@@ -134,6 +119,7 @@ const IndexPage = () => {
           ))}
         </Grid>
 
+        {/* Netlify Identity login button */}
         <div data-netlify-identity-button></div>
       </section>
     </Layout>
