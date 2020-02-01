@@ -3,15 +3,23 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 const EpisodeModel = require('./Episode')
 
-// Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
-// Accessible at /.netlify/functions/get-episodes
+/**
+ * Serverless Function: Retrieve a list of episodes.
+ * Accessible at GET /.netlify/functions/get-episodes
+ * 
+ * Docs on event and context https://www.netlify.com/docs/functions/#the-handler-method
+ */
 exports.handler = async (event, context) => {
   const MONGO_URI = process.env.MONGO_URI
   mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
   try {
-    const dontInclude = { '_id': false, '__v': false, 'createdAt': false } // fields to exclude from query result
+    // fields to exclude from query result
+    const dontInclude = { '_id': false, '__v': false, 'createdAt': false }
+
+    // Retrieve all episodes
     const mongoResponse = await EpisodeModel.find({}, dontInclude).exec()
+
     const response = {
       message: 'ok',
       data: mongoResponse

@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
 
+/**
+ * Definition of an episode document in MongoDB
+ */
 const EpisodeSchema = new mongoose.Schema({
   episodeId: { type: String, unique: true, index: true },
   episodeTitle: { type: String, required: true },
